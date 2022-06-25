@@ -3,7 +3,7 @@
 import Combine
 import SwiftUI
 
-class MacEditorController: NSViewController {
+public class MacEditorController: NSViewController {
     var textView = NSTextView()
     var cancellables = Set<AnyCancellable>()
     var hasLineNumbers = true
@@ -11,7 +11,7 @@ class MacEditorController: NSViewController {
     var isRichText = false
     var font = NSFont.monospacedSystemFont(ofSize: NSFont.systemFontSize, weight: NSFont.Weight.regular)
     
-    override func loadView() {
+    public override func loadView() {
         let scrollView = NSScrollView()
         scrollView.hasVerticalScroller = true
         textView.allowsUndo = true
@@ -50,23 +50,23 @@ class MacEditorController: NSViewController {
         view = scrollView
     }
     
-    override func viewDidAppear() {
+    public override func viewDidAppear() {
         view.window?.makeFirstResponder(view)
     }
 }
 
-struct MacEditorControllerView: NSViewControllerRepresentable {
+public struct MacEditorControllerView: NSViewControllerRepresentable {
     @Binding var text: String
     
-    init(text: Binding<String>) {
+    public init(text: Binding<String>) {
         self._text = text
     }
     
-    func makeCoordinator() -> Coordinator {
+    public func makeCoordinator() -> Coordinator {
         return Coordinator(self)
     }
     
-    class Coordinator: NSObject, NSTextStorageDelegate {
+    public final class Coordinator: NSObject, NSTextStorageDelegate {
         private var parent: MacEditorControllerView
         var shouldUpdateText = true
         
@@ -74,7 +74,7 @@ struct MacEditorControllerView: NSViewControllerRepresentable {
             self.parent = parent
         }
         
-        func textStorage(_ textStorage: NSTextStorage, didProcessEditing editedMask: NSTextStorageEditActions, range editedRange: NSRange, changeInLength delta: Int) {
+        public func textStorage(_ textStorage: NSTextStorage, didProcessEditing editedMask: NSTextStorageEditActions, range editedRange: NSRange, changeInLength delta: Int) {
             guard shouldUpdateText else {
                 return
             }
@@ -90,13 +90,13 @@ struct MacEditorControllerView: NSViewControllerRepresentable {
         }
     }
     
-    func makeNSViewController(context: Context) -> MacEditorController {
+    public func makeNSViewController(context: Context) -> MacEditorController {
         let vc = MacEditorController()
         vc.textView.textStorage?.delegate = context.coordinator
         return vc
     }
     
-    func updateNSViewController(_ nsViewController: MacEditorController, context: Context) {
+    public func updateNSViewController(_ nsViewController: MacEditorController, context: Context) {
         if text != nsViewController.textView.string {
             context.coordinator.shouldUpdateText = false
             nsViewController.textView.string = text
