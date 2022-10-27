@@ -79,14 +79,14 @@ public class MacEditorController: NSViewController {
 
 public struct MacEditorView: NSViewControllerRepresentable {
 //    @Binding var text: String
-    @Binding var text: NSAttributedString
+    @Binding var text: NSMutableAttributedString
 
     var textViewBackground: NSColor
     var hasLineNumbers: Bool
     var hasHorizontalScroll: Bool
     var isRichText: Bool
 
-    public init(text: Binding<NSAttributedString>,
+    public init(text: Binding<NSMutableAttributedString>,
                 textViewBackground: NSColor = .textBackgroundColor,
                 hasLineNumbers: Bool = true,
                 hasHorizontalScroll: Bool = true,
@@ -103,30 +103,19 @@ public struct MacEditorView: NSViewControllerRepresentable {
         return Coordinator(self)
     }
 
-    public final class Coordinator: NSObject, NSTextViewDelegate {
+    public final class Coordinator: NSObject {
         private var parent: MacEditorView
         var shouldUpdateText = true
 
         init(_ parent: MacEditorView) {
             self.parent = parent
         }
-
-        public func textDidChange(_ notification: Notification) {
-            guard let textview = notification.object as? NSTextView else {
-                return
-            }
-
-            parent.text = textview.attributedString()
-        }
-
-        public func textView(_ textView: NSTextView, shouldChangeTextIn affectedCharRange: NSRange, replacementString: String?) -> Bool {
-            return true
-        }
     }
 
     public func makeNSViewController(context: Context) -> MacEditorController {
         let vc = MacEditorController(textViewBackground: textViewBackground, hasLineNumbers: hasLineNumbers, hasHorizontalScroll: hasHorizontalScroll, isRichText: isRichText)
-        vc.textView.delegate = context.coordinator
+//        vc.textView.delegate = context.coordinator
+        vc.textView.textStorage?.delegate = context.coordinator
         return vc
     }
 
@@ -139,3 +128,27 @@ public struct MacEditorView: NSViewControllerRepresentable {
         }
     }
 }
+
+extension MacEditorView.Coordinator: NSTextStorageDelegate{
+    public func textStorage(_ textStorage: NSTextStorage, didProcessEditing editedMask: NSTextStorageEditActions, range editedRange: NSRange, changeInLength delta: Int) {
+        let edited = textStorage.attributedSubstring(from: editedRange)
+        parent.text.replaceCharacters(in: editedRange, with: edited)
+    }
+}
+
+//extension MacEditorView.Coordinator: NSTextViewDelegate {
+//    public func textDidChange(_ notification: Notification) {
+//        guard shouldUpdateText else {
+//            return
+//        }
+//        guard let textview = notification.object as? NSTextView else {
+//            return
+//        }
+//
+//        parent.text = NSMutableAttributedString(attributedString: textview.attributedString())
+//    }
+//
+//    public func textView(_ textView: NSTextView, shouldChangeTextIn affectedCharRange: NSRange, replacementString: String?) -> Bool {
+//        return true
+//    }
+//}

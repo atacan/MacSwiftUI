@@ -10,8 +10,7 @@ let attrs: [NSAttributedString.Key : Any] = [
     .font: NSFont.monospacedSystemFont(ofSize: NSFont.systemFontSize, weight: NSFont.Weight.regular)
 ]
 
-let myText = NSAttributedString(string: """
-
+let myText = NSMutableAttributedString(string: """
 extension JsonClientError: LocalizedError  {
     var errorDescription: String? {
         switch self {
