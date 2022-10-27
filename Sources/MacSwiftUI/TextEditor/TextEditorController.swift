@@ -10,21 +10,18 @@ public class MacEditorController: NSViewController {
     var hasLineNumbers: Bool
     var hasHorizontalScroll: Bool
     var isRichText: Bool
-    var font: NSFont
 
     var lineNumberGutter: LineNumberGutter
 
     init(textViewBackground: NSColor,
          hasLineNumbers: Bool,
          hasHorizontalScroll: Bool,
-         isRichText: Bool,
-         font: NSFont)
+         isRichText: Bool)
     {
         self.textViewBackground = textViewBackground
         self.hasLineNumbers = hasLineNumbers
         self.hasHorizontalScroll = hasHorizontalScroll
         self.isRichText = isRichText
-        self.font = font
         lineNumberGutter = LineNumberGutter(withTextView: textView, foregroundColor: .secondaryLabelColor, backgroundColor: .textBackgroundColor)
 
         super.init(nibName: nil, bundle: nil)
@@ -40,7 +37,6 @@ public class MacEditorController: NSViewController {
         scrollView.hasVerticalScroller = true
         textView.allowsUndo = true
 
-        textView.font = font
         textView.isRichText = isRichText
         textView.backgroundColor = textViewBackground
 
@@ -82,34 +78,32 @@ public class MacEditorController: NSViewController {
 }
 
 public struct MacEditorView: NSViewControllerRepresentable {
-    @Binding var text: String
+//    @Binding var text: String
+    @Binding var text: NSAttributedString
 
     var textViewBackground: NSColor
     var hasLineNumbers: Bool
     var hasHorizontalScroll: Bool
     var isRichText: Bool
-    var font: NSFont
 
-    public init(text: Binding<String>,
+    public init(text: Binding<NSAttributedString>,
                 textViewBackground: NSColor = .textBackgroundColor,
                 hasLineNumbers: Bool = true,
                 hasHorizontalScroll: Bool = true,
-                isRichText: Bool = true,
-                font: NSFont = NSFont.monospacedSystemFont(ofSize: NSFont.systemFontSize, weight: NSFont.Weight.regular))
+                isRichText: Bool = true)
     {
         _text = text
         self.textViewBackground = textViewBackground
         self.hasLineNumbers = hasLineNumbers
         self.hasHorizontalScroll = hasHorizontalScroll
         self.isRichText = isRichText
-        self.font = font
     }
 
     public func makeCoordinator() -> Coordinator {
         return Coordinator(self)
     }
 
-    public final class Coordinator: NSObject, NSTextStorageDelegate {
+    public final class Coordinator: NSObject, NSTextViewDelegate {
         private var parent: MacEditorView
         var shouldUpdateText = true
 
@@ -117,32 +111,29 @@ public struct MacEditorView: NSViewControllerRepresentable {
             self.parent = parent
         }
 
-        public func textStorage(_ textStorage: NSTextStorage, didProcessEditing editedMask: NSTextStorageEditActions, range editedRange: NSRange, changeInLength delta: Int) {
-            guard shouldUpdateText else {
+        public func textDidChange(_ notification: Notification) {
+            guard let textview = notification.object as? NSTextView else {
                 return
             }
-            let edited = textStorage.attributedSubstring(from: editedRange).string
-            let insertIndex = parent.text.utf16.index(parent.text.utf16.startIndex, offsetBy: editedRange.lowerBound)
 
-            func numberOfCharactersToDelete() -> Int {
-                editedRange.length - delta
-            }
+            parent.text = textview.attributedString()
+        }
 
-            let endIndex = parent.text.utf16.index(insertIndex, offsetBy: numberOfCharactersToDelete())
-            parent.text.replaceSubrange(insertIndex ..< endIndex, with: edited)
+        public func textView(_ textView: NSTextView, shouldChangeTextIn affectedCharRange: NSRange, replacementString: String?) -> Bool {
+            return true
         }
     }
 
     public func makeNSViewController(context: Context) -> MacEditorController {
-        let vc = MacEditorController(textViewBackground: textViewBackground, hasLineNumbers: hasLineNumbers, hasHorizontalScroll: hasHorizontalScroll, isRichText: isRichText, font: font)
-        vc.textView.textStorage?.delegate = context.coordinator
+        let vc = MacEditorController(textViewBackground: textViewBackground, hasLineNumbers: hasLineNumbers, hasHorizontalScroll: hasHorizontalScroll, isRichText: isRichText)
+        vc.textView.delegate = context.coordinator
         return vc
     }
 
     public func updateNSViewController(_ nsViewController: MacEditorController, context: Context) {
-        if text != nsViewController.textView.string {
+        if text != nsViewController.textView.attributedString() {
             context.coordinator.shouldUpdateText = false
-            nsViewController.textView.string = text
+            nsViewController.textView.textStorage?.setAttributedString(text)
             nsViewController.lineNumberGutter.needsDisplay = true
             context.coordinator.shouldUpdateText = true
         }
