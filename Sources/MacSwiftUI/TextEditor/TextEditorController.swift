@@ -12,7 +12,6 @@ public class MacEditorController: NSViewController {
     var isRichText: Bool
     var font: NSFont
 
-//    let lineNumberGutter = LineNumberGutter(withTextView: textView, foregroundColor: .secondaryLabelColor, backgroundColor: .textBackgroundColor)
     var lineNumberGutter: LineNumberGutter
 
     init(textViewBackground: NSColor,
