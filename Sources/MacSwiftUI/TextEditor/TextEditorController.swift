@@ -10,18 +10,22 @@ public class MacEditorController: NSViewController {
     var hasLineNumbers: Bool
     var hasHorizontalScroll: Bool
     var isRichText: Bool
+    var isEditable: Bool
 
     var lineNumberGutter: LineNumberGutter
 
     init(textViewBackground: NSColor,
          hasLineNumbers: Bool,
          hasHorizontalScroll: Bool,
-         isRichText: Bool)
+         isRichText: Bool,
+         isEditable: Bool
+    )
     {
         self.textViewBackground = textViewBackground
         self.hasLineNumbers = hasLineNumbers
         self.hasHorizontalScroll = hasHorizontalScroll
         self.isRichText = isRichText
+        self.isEditable = isEditable
         lineNumberGutter = LineNumberGutter(withTextView: textView, foregroundColor: .secondaryLabelColor, backgroundColor: .textBackgroundColor)
 
         super.init(nibName: nil, bundle: nil)
@@ -38,6 +42,7 @@ public class MacEditorController: NSViewController {
         // user given configurations
         textView.isRichText = isRichText
         textView.backgroundColor = textViewBackground
+        textView.isEditable = isEditable
         // defaulted configurations
         textView.isAutomaticQuoteSubstitutionEnabled = false
         textView.isAutomaticDashSubstitutionEnabled = false
@@ -92,18 +97,22 @@ public struct MacEditorView: NSViewControllerRepresentable {
     var hasLineNumbers: Bool
     var hasHorizontalScroll: Bool
     var isRichText: Bool
+    var isEditable: Bool
 
     public init(text: Binding<NSMutableAttributedString>,
                 textViewBackground: NSColor = .textBackgroundColor,
                 hasLineNumbers: Bool = true,
                 hasHorizontalScroll: Bool = true,
-                isRichText: Bool = true)
+                isRichText: Bool = true,
+                isEditable: Bool = true
+    )
     {
         _text = text
         self.textViewBackground = textViewBackground
         self.hasLineNumbers = hasLineNumbers
         self.hasHorizontalScroll = hasHorizontalScroll
         self.isRichText = isRichText
+        self.isEditable = isEditable
     }
 
     public func makeCoordinator() -> Coordinator {
@@ -120,7 +129,7 @@ public struct MacEditorView: NSViewControllerRepresentable {
     }
 
     public func makeNSViewController(context: Context) -> MacEditorController {
-        let vc = MacEditorController(textViewBackground: textViewBackground, hasLineNumbers: hasLineNumbers, hasHorizontalScroll: hasHorizontalScroll, isRichText: isRichText)
+        let vc = MacEditorController(textViewBackground: textViewBackground, hasLineNumbers: hasLineNumbers, hasHorizontalScroll: hasHorizontalScroll, isRichText: isRichText, isEditable: isEditable)
 //        vc.textView.delegate = context.coordinator
         vc.textView.textStorage?.delegate = context.coordinator
         return vc
