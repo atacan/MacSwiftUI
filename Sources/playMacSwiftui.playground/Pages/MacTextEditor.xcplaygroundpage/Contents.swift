@@ -3,6 +3,7 @@
 import Foundation
 import Cocoa
 import MacSwiftUI
+import SwiftUI
 import PlaygroundSupport
 
 let attrs: [NSAttributedString.Key : Any] = [
@@ -10,30 +11,47 @@ let attrs: [NSAttributedString.Key : Any] = [
     .font: NSFont.monospacedSystemFont(ofSize: NSFont.systemFontSize, weight: NSFont.Weight.regular)
 ]
 
-let myText = NSMutableAttributedString(string: """
-extension JsonClientError: LocalizedError  {
-    var errorDescription: String? {
-        switch self {
-        case .jsonSerial:
-            return "JSONSerialization"
-        case .stringEncoding:
-            return "this didn't work `jsonString = String(data: data, encoding: .utf8)` "
+struct MyEditor: View {
+    @State var myText = NSMutableAttributedString(string: """
+    extension JsonClientError: LocalizedError  {
+        var errorDescription: String? {
+            switch self {
+            case .jsonSerial:
+                return "JSONSerialization"
+            case .stringEncoding:
+                return "this didn't work `jsonString = String(data: data, encoding: .utf8)` "
+            }
+        }
+    }
+
+    extension DependencyValues {
+        var jsonClient: JsonClient {
+            get { self[JsonClient.self] }
+            set { self[JsonClient.self] = newValue }
+        }
+    }
+    """, attributes: attrs)
+    
+    @State var output = NSAttributedString(string: "")
+
+    var body: some View {
+        VSplitView {
+            MacEditorView(text: $myText, textViewBackground: .black, hasLineNumbers: true, hasHorizontalScroll: false, isRichText: true)
+                .frame(width: 600, height: nil, alignment: .center)
+            Button("See") {
+                output = myText
+                print(output)
+            }
+            ZStack {
+                Rectangle()
+                Text(AttributedString(output))
+                    .frame(width: 600, height: 800, alignment: .center)
+            }
         }
     }
 }
 
-extension DependencyValues {
-    var jsonClient: JsonClient {
-        get { self[JsonClient.self] }
-        set { self[JsonClient.self] = newValue }
-    }
-}
-""", attributes: attrs)
 
-
-// let editorView = MacEditorControllerView(text: .constant("something\nand other things"))
-let editorView = MacEditorView(text: .constant(myText), textViewBackground: .black, hasLineNumbers: true, hasHorizontalScroll: false, isRichText: true)
-
-PlaygroundPage.current.setLiveView(editorView)
+PlaygroundPage.current.setLiveView(MyEditor())
 
 //: [Next](@next)

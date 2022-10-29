@@ -34,11 +34,17 @@ public class MacEditorController: NSViewController {
 
     override public func loadView() {
         let scrollView = NSScrollView()
-        scrollView.hasVerticalScroller = true
-        textView.allowsUndo = true
 
+        // user given configurations
         textView.isRichText = isRichText
         textView.backgroundColor = textViewBackground
+        // defaulted configurations
+        textView.isAutomaticQuoteSubstitutionEnabled = false
+        textView.isAutomaticDashSubstitutionEnabled = false
+        textView.isAutomaticTextReplacementEnabled = false
+        textView.isAutomaticSpellingCorrectionEnabled = false
+        textView.isAutomaticLinkDetectionEnabled = false
+        textView.isContinuousSpellCheckingEnabled = false
 
         // enable horizontal scroll, disable line wrap
         if hasHorizontalScroll {
@@ -57,13 +63,14 @@ public class MacEditorController: NSViewController {
             scrollView.hasVerticalRuler = true
             scrollView.rulersVisible = true
             scrollView.verticalRulerView = lineNumberGutter
-            lineNumberGutter = LineNumberGutter(withTextView: textView, foregroundColor: .secondaryLabelColor, backgroundColor: .textBackgroundColor)
             NotificationCenter.default.publisher(for: NSView.frameDidChangeNotification).sink { [weak self] _ in
                 guard let self = self else { return }
+//                print(Date(), "NSView.frameDidChangeNotification")
                 self.lineNumberGutter.needsDisplay = true
             }.store(in: &cancellables)
             NotificationCenter.default.publisher(for: NSText.didChangeNotification).sink { [weak self] _ in
                 guard let self = self else { return }
+//                print(Date(), "NSText.didChangeNotification")
                 self.lineNumberGutter.needsDisplay = true
             }.store(in: &cancellables)
         }
@@ -129,14 +136,18 @@ public struct MacEditorView: NSViewControllerRepresentable {
     }
 }
 
-extension MacEditorView.Coordinator: NSTextStorageDelegate{
+extension MacEditorView.Coordinator: NSTextStorageDelegate {
     public func textStorage(_ textStorage: NSTextStorage, didProcessEditing editedMask: NSTextStorageEditActions, range editedRange: NSRange, changeInLength delta: Int) {
+        guard shouldUpdateText else {
+            return
+        }
         let edited = textStorage.attributedSubstring(from: editedRange)
-        parent.text.replaceCharacters(in: editedRange, with: edited)
+        let adjustedRange = NSRange(location: editedRange.location, length: editedRange.length - delta)
+        parent.text.replaceCharacters(in: adjustedRange, with: edited)
     }
 }
 
-//extension MacEditorView.Coordinator: NSTextViewDelegate {
+// extension MacEditorView.Coordinator: NSTextViewDelegate {
 //    public func textDidChange(_ notification: Notification) {
 //        guard shouldUpdateText else {
 //            return
@@ -151,4 +162,4 @@ extension MacEditorView.Coordinator: NSTextStorageDelegate{
 //    public func textView(_ textView: NSTextView, shouldChangeTextIn affectedCharRange: NSRange, replacementString: String?) -> Bool {
 //        return true
 //    }
-//}
+// }
