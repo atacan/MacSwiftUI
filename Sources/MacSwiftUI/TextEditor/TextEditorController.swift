@@ -47,6 +47,7 @@ public class MacEditorController: NSViewController {
         textView.isEditable = isEditable
         textView.font = initialFont
         // defaulted configurations
+        textView.allowsUndo = true
         textView.isAutomaticQuoteSubstitutionEnabled = false
         textView.isAutomaticDashSubstitutionEnabled = false
         textView.isAutomaticTextReplacementEnabled = false
