@@ -5,6 +5,7 @@ import SwiftUI
 
 public class MacEditorController: NSViewController {
     var textView = NSTextView()
+    var initialFont: NSFont
     var textViewBackground: NSColor
     var cancellables = Set<AnyCancellable>()
     var hasLineNumbers: Bool
@@ -14,13 +15,14 @@ public class MacEditorController: NSViewController {
 
     var lineNumberGutter: LineNumberGutter
 
-    init(textViewBackground: NSColor,
+    init(initialFont: NSFont,
+         textViewBackground: NSColor,
          hasLineNumbers: Bool,
          hasHorizontalScroll: Bool,
          isRichText: Bool,
-         isEditable: Bool
-    )
+         isEditable: Bool)
     {
+        self.initialFont = initialFont
         self.textViewBackground = textViewBackground
         self.hasLineNumbers = hasLineNumbers
         self.hasHorizontalScroll = hasHorizontalScroll
@@ -43,6 +45,7 @@ public class MacEditorController: NSViewController {
         textView.isRichText = isRichText
         textView.backgroundColor = textViewBackground
         textView.isEditable = isEditable
+        textView.font = initialFont
         // defaulted configurations
         textView.isAutomaticQuoteSubstitutionEnabled = false
         textView.isAutomaticDashSubstitutionEnabled = false
@@ -93,6 +96,7 @@ public struct MacEditorView: NSViewControllerRepresentable {
 //    @Binding var text: String
     @Binding var text: NSMutableAttributedString
 
+    var initialFont: NSFont
     var textViewBackground: NSColor
     var hasLineNumbers: Bool
     var hasHorizontalScroll: Bool
@@ -100,14 +104,15 @@ public struct MacEditorView: NSViewControllerRepresentable {
     var isEditable: Bool
 
     public init(text: Binding<NSMutableAttributedString>,
+                initialFont: NSFont = .monospacedSystemFont(ofSize: NSFont.systemFontSize, weight: .regular),
                 textViewBackground: NSColor = .textBackgroundColor,
                 hasLineNumbers: Bool = true,
                 hasHorizontalScroll: Bool = true,
                 isRichText: Bool = true,
-                isEditable: Bool = true
-    )
+                isEditable: Bool = true)
     {
         _text = text
+        self.initialFont = initialFont
         self.textViewBackground = textViewBackground
         self.hasLineNumbers = hasLineNumbers
         self.hasHorizontalScroll = hasHorizontalScroll
@@ -129,7 +134,7 @@ public struct MacEditorView: NSViewControllerRepresentable {
     }
 
     public func makeNSViewController(context: Context) -> MacEditorController {
-        let vc = MacEditorController(textViewBackground: textViewBackground, hasLineNumbers: hasLineNumbers, hasHorizontalScroll: hasHorizontalScroll, isRichText: isRichText, isEditable: isEditable)
+        let vc = MacEditorController(initialFont: initialFont, textViewBackground: textViewBackground, hasLineNumbers: hasLineNumbers, hasHorizontalScroll: hasHorizontalScroll, isRichText: isRichText, isEditable: isEditable)
 //        vc.textView.delegate = context.coordinator
         vc.textView.textStorage?.delegate = context.coordinator
         return vc
