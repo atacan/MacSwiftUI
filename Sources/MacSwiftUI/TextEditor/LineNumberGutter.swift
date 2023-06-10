@@ -24,6 +24,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+#if os(macOS)
+
 import Cocoa
 
 /// Defines the width of the gutter view.
@@ -188,3 +190,5 @@ class LineNumberGutter: NSRulerView {
         drawLineNumber(num: "\(num)", atYPosition: yPos)
     }
 }
+
+#endif
