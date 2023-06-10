@@ -1,5 +1,5 @@
 // based on https://oliver-epper.de/posts/wrap-nstextview-in-swiftui/
-
+#if os(macOS)
 import Combine
 import SwiftUI
 
@@ -178,3 +178,4 @@ extension MacEditorView.Coordinator: NSTextStorageDelegate {
 //        return true
 //    }
 // }
+#endif
