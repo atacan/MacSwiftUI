@@ -74,12 +74,10 @@ public class PlainMacEditorController: NSViewController {
             scrollView.verticalRulerView = lineNumberGutter
             NotificationCenter.default.publisher(for: NSView.frameDidChangeNotification).sink { [weak self] _ in
                 guard let self = self else { return }
-//                print(Date(), "NSView.frameDidChangeNotification")
                 self.lineNumberGutter.needsDisplay = true
             }.store(in: &cancellables)
             NotificationCenter.default.publisher(for: NSText.didChangeNotification).sink { [weak self] _ in
                 guard let self = self else { return }
-//                print(Date(), "NSText.didChangeNotification")
                 self.lineNumberGutter.needsDisplay = true
             }.store(in: &cancellables)
         }
