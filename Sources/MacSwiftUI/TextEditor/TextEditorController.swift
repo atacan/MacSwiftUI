@@ -74,12 +74,10 @@ public class MacEditorController: NSViewController {
             scrollView.verticalRulerView = lineNumberGutter
             NotificationCenter.default.publisher(for: NSView.frameDidChangeNotification).sink { [weak self] _ in
                 guard let self = self else { return }
-//                print(Date(), "NSView.frameDidChangeNotification")
                 self.lineNumberGutter.needsDisplay = true
             }.store(in: &cancellables)
             NotificationCenter.default.publisher(for: NSText.didChangeNotification).sink { [weak self] _ in
                 guard let self = self else { return }
-//                print(Date(), "NSText.didChangeNotification")
                 self.lineNumberGutter.needsDisplay = true
             }.store(in: &cancellables)
         }
@@ -162,20 +160,4 @@ extension MacEditorView.Coordinator: NSTextStorageDelegate {
     }
 }
 
-// extension MacEditorView.Coordinator: NSTextViewDelegate {
-//    public func textDidChange(_ notification: Notification) {
-//        guard shouldUpdateText else {
-//            return
-//        }
-//        guard let textview = notification.object as? NSTextView else {
-//            return
-//        }
-//
-//        parent.text = NSMutableAttributedString(attributedString: textview.attributedString())
-//    }
-//
-//    public func textView(_ textView: NSTextView, shouldChangeTextIn affectedCharRange: NSRange, replacementString: String?) -> Bool {
-//        return true
-//    }
-// }
 #endif
