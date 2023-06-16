@@ -9,7 +9,10 @@ import SwiftUI
 struct DevelopMacSwiftUIApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            VStack {
+                ContentView()
+                PlainEditor()
+            }
         }
     }
 }
