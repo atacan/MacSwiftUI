@@ -1,3 +1,3 @@
 # MacSwiftUI
 
-A description of this package.
+NSTextView with line numbers.
