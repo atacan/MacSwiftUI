@@ -18,8 +18,8 @@ struct PlainEditor: View {
                         .imageScale(.large)
                         .foregroundStyle(.tint)
                 } // <-Button
-                Text(text)
-                PlainMacEditorView(text: $text)
+//                Text(text)
+                PlainMacEditorView(text: $text, hasHorizontalScroll: false)
         } // <-VStack
     }
 }
