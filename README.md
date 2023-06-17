@@ -13,7 +13,7 @@ MacSwiftUI includes two versions of NSTextView - one that accepts attributed str
 
 #### Usage
 Attributed String
-```swift
+
 ```swift
 struct ContentView: View {
     @State var text: NSMutableAttributedString = .init()
@@ -27,7 +27,9 @@ struct ContentView: View {
     }
 }
 ```
+
 Plain Text
+
 ```swift
 struct PlainEditor: View {
     @State var text: String = ""
