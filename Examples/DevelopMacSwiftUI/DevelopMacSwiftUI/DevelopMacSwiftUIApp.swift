@@ -11,6 +11,7 @@ struct DevelopMacSwiftUIApp: App {
         WindowGroup {
             VStack {
                 ContentView()
+                ReferenceBindingView(model: .init())
                 PlainEditor()
             }
         }

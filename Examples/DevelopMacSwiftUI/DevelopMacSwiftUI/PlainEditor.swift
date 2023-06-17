@@ -10,7 +10,17 @@ struct PlainEditor: View {
     @State var text: String = ""
     
     var body: some View {
-        PlainMacEditorView(text: $text)
+        VStack(alignment: .leading) {
+        Button {
+                    print(text)
+                } label: {
+                    Image(systemName: "globe")
+                        .imageScale(.large)
+                        .foregroundStyle(.tint)
+                } // <-Button
+                Text(text)
+                PlainMacEditorView(text: $text)
+        } // <-VStack
     }
 }
 
