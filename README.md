@@ -3,12 +3,44 @@
 Welcome to MacSwiftUI, a Swift package designed to enhance your macOS application development with SwiftUI. This package provides a set of wrapped AppKit views for SwiftUI, adding unique and essential features that are not available in the default SwiftUI editors.
 
 ## Key Features
+### **NSTextView with Line Numbers** 
 
-1. **NSTextView with Line Numbers:** MacSwiftUI includes two versions of NSTextView - one that accepts attributed strings and another for plain strings. A distinguishing feature of these views is the integration of line numbers, a must-have for programmers and writers alike, which is notably absent in SwiftUI's default text editors.
+MacSwiftUI includes two versions of NSTextView - one that accepts attributed strings and another for plain strings. A distinguishing feature of these views is the integration of line numbers, a must-have for programmers and writers alike, which is notably absent in SwiftUI's default text editors.
 
-   - **Customizable:** Unlike the standard SwiftUI text editors that lack customization options, our NSTextView variants offer a flexible user experience. 
-      - **Line Wrapping:** You can enable horizontal scrolling or line wrapping based on your application's needs.
-      - **Rich Text:** Expand the functionality of your text editors with our rich text enablement feature. It allows for the creation and editing of styled text, offering a more engaging user experience.
+- **Customizable:** Unlike the standard SwiftUI text editors that lack customization options, our NSTextView variants offer a flexible user experience. 
+    - **Line Wrapping:** You can enable horizontal scrolling or line wrapping based on your application's needs.
+    - **Rich Text:** Expand the functionality of your text editors with our rich text enablement feature. It allows for the creation and editing of styled text, offering a more engaging user experience.
+
+#### Usage
+Attributed String
+```swift
+```swift
+struct ContentView: View {
+    @State var text: NSMutableAttributedString = .init()
+    
+    var body: some View {
+        VStack {
+            MacEditorView(text: $text)
+            Text(text.string)
+        }
+        .padding()
+    }
+}
+```
+Plain Text
+```swift
+struct PlainEditor: View {
+    @State var text: String = ""
+    
+    var body: some View {
+        VStack(alignment: .leading) {
+            PlainMacEditorView(text: $text)
+            Text(text)  
+        }
+    }
+}
+
+```
 
 MacSwiftUI's mission is to make SwiftUI even more powerful and versatile for macOS app developers. With our package, you can take full control of your text editor views, customizing and enhancing them to suit your specific needs.
 
