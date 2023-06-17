@@ -157,6 +157,10 @@ extension MacEditorView.Coordinator: NSTextStorageDelegate {
         let edited = textStorage.attributedSubstring(from: editedRange)
         let adjustedRange = NSRange(location: editedRange.location, length: editedRange.length - delta)
         parent.text.replaceCharacters(in: adjustedRange, with: edited)
+        // changing the text only doesn't triggere a refresh in SwiftUI views because NSMutableAttributedString is a reference type
+        if let copy = parent.text.mutableCopy() as? NSMutableAttributedString  {
+            parent.text = copy
+        }
     }
 }
 
