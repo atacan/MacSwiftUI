@@ -42,7 +42,7 @@ struct PlainEditor: View {
 
 ```
 <img width="677" alt="SCR-20230617-qhjh" src="https://github.com/atacan/MacSwiftUI/assets/765873/21f54800-ad5d-46fa-8e05-9b75596767dd">
-
+</br></br>
 MacSwiftUI's mission is to make SwiftUI even more powerful and versatile for macOS app developers. With our package, you can take full control of your text editor views, customizing and enhancing them to suit your specific needs.
 
 ## Why Use MacSwiftUI?
