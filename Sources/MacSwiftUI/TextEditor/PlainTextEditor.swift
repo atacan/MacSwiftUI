@@ -87,7 +87,7 @@ public class PlainMacEditorController: NSViewController {
     }
 
     override public func viewDidAppear() {
-        view.window?.makeFirstResponder(view)
+//        view.window?.makeFirstResponder(view)
     }
 }
 
