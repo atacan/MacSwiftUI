@@ -14,6 +14,7 @@ struct NeonEditorPreview: View {
         VStack(alignment: .leading) {
             Button {
                 print(text)
+                text = .init(string: "Html {\nDiv(title)\n}", attributes: [NSAttributedString.Key.font : NSFont.systemFont(ofSize: 14, weight: .bold)])
             } label: {
                 Text("Neon")
                     .font(.title3)

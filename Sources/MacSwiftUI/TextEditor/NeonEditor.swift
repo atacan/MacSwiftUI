@@ -39,8 +39,7 @@ public class NeonEditorController: NSViewController {
         lineNumberGutter = LineNumberGutter(withTextView: textView, foregroundColor: .secondaryLabelColor, backgroundColor: .textBackgroundColor)
 
         let provider: TextViewSystemInterface.AttributeProvider = { token in
-            print(token.name)
-//            return attributeFor(token: token)
+//            print(token.name)
             return colorFor(token: token)
 		}
 
@@ -155,7 +154,8 @@ public struct NeonEditorView: NSViewControllerRepresentable {
     }
 
     public func updateNSViewController(_ nsViewController: NeonEditorController, context: Context) {
-//        view.text = text
+        nsViewController.textView.textStorage?.setAttributedString(text)
+        nsViewController.lineNumberGutter.needsDisplay = true
     }
     
     public class Coordinator: NSObject, NSTextViewDelegate {
