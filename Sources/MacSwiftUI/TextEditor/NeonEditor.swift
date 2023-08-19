@@ -87,7 +87,11 @@ public class NeonEditorController: NSViewController {
                 self.lineNumberGutter.needsDisplay = true
             }.store(in: &cancellables)
         }
-        
+
+        view = scrollView
+    }
+    
+    public override func viewDidLoad() {
         let provider: TextViewSystemInterface.AttributeProvider = { token in
 //            print(token.name)
             return colorFor(token: token)
@@ -105,9 +109,6 @@ public class NeonEditorController: NSViewController {
                                                     language: language,
                                                     highlightQuery: query,
                                                     attributeProvider: provider)
-
-
-        view = scrollView
     }
 
     override public func viewDidAppear() {
