@@ -154,8 +154,10 @@ public struct NeonEditorView: NSViewControllerRepresentable {
     }
 
     public func updateNSViewController(_ nsViewController: NeonEditorController, context: Context) {
-        nsViewController.textView.textStorage?.setAttributedString(text)
-        nsViewController.lineNumberGutter.needsDisplay = true
+        if text != nsViewController.textView.attributedString() {
+            nsViewController.textView.textStorage?.setAttributedString(text)
+            nsViewController.lineNumberGutter.needsDisplay = true
+        }
     }
     
     public class Coordinator: NSObject, NSTextViewDelegate {
