@@ -92,6 +92,11 @@ public class NeonEditorController: NSViewController {
     }
     
     public override func viewDidLoad() {
+        //
+    }
+
+    override public func viewDidAppear() {
+//        view.window?.makeFirstResponder(view)
         let provider: TextViewSystemInterface.AttributeProvider = { token in
 //            print(token.name)
             return colorFor(token: token)
@@ -109,10 +114,6 @@ public class NeonEditorController: NSViewController {
                                                     language: language,
                                                     highlightQuery: query,
                                                     attributeProvider: provider)
-    }
-
-    override public func viewDidAppear() {
-//        view.window?.makeFirstResponder(view)
     }
 }
 
