@@ -12,7 +12,8 @@ struct DevelopMacSwiftUIApp: App {
             VStack {
 //                ContentView()
 //                ReferenceBindingView(model: .init())
-                PlainEditor()
+//                PlainEditor()
+                NeonEditorPreview()
             }
         }
     }

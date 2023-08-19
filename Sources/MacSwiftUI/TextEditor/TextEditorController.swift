@@ -1,5 +1,5 @@
-// based on https://oliver-epper.de/posts/wrap-nstextview-in-swiftui/
 #if os(macOS)
+// based on https://oliver-epper.de/posts/wrap-nstextview-in-swiftui/
 import Combine
 import SwiftUI
 
