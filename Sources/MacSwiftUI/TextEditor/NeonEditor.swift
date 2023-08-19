@@ -9,7 +9,7 @@ import TreeSitterSwift
 public class NeonEditorController: NSViewController {
     var textView: NSTextView
     let scrollView = NSScrollView()
-    let highlighter: TextViewHighlighter
+    var highlighter: TextViewHighlighter?
     var initialFont: NSFont
     var textViewBackground: NSColor
     var cancellables = Set<AnyCancellable>()
@@ -37,24 +37,6 @@ public class NeonEditorController: NSViewController {
         self.isRichText = isRichText
         self.isEditable = isEditable
         lineNumberGutter = LineNumberGutter(withTextView: textView, foregroundColor: .secondaryLabelColor, backgroundColor: .textBackgroundColor)
-
-        let provider: TextViewSystemInterface.AttributeProvider = { token in
-//            print(token.name)
-            return colorFor(token: token)
-		}
-
-		let language = Language(language: tree_sitter_swift())
-
-		let url = Bundle.main
-					  .resourceURL?
-					  .appendingPathComponent("TreeSitterSwift_TreeSitterSwift.bundle")
-					  .appendingPathComponent("Contents/Resources/queries/highlights.scm")
-		let query = try! language.query(contentsOf: url!)
-
-		self.highlighter = try! TextViewHighlighter(textView: textView,
-													language: language,
-													highlightQuery: query,
-													attributeProvider: provider)
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -105,6 +87,25 @@ public class NeonEditorController: NSViewController {
                 self.lineNumberGutter.needsDisplay = true
             }.store(in: &cancellables)
         }
+        
+        let provider: TextViewSystemInterface.AttributeProvider = { token in
+//            print(token.name)
+            return colorFor(token: token)
+        }
+
+        let language = Language(language: tree_sitter_swift())
+
+        let url = Bundle.main
+                      .resourceURL?
+                      .appendingPathComponent("TreeSitterSwift_TreeSitterSwift.bundle")
+                      .appendingPathComponent("Contents/Resources/queries/highlights.scm")
+        let query = try! language.query(contentsOf: url!)
+
+        self.highlighter = try! TextViewHighlighter(textView: textView,
+                                                    language: language,
+                                                    highlightQuery: query,
+                                                    attributeProvider: provider)
+
 
         view = scrollView
     }
