@@ -10,9 +10,9 @@ struct DevelopMacSwiftUIApp: App {
     var body: some Scene {
         WindowGroup {
             VStack {
-//                ContentView()
+                ContentView()
 //                ReferenceBindingView(model: .init())
-                PlainEditor()
+//                PlainEditor()
             }
         }
     }
