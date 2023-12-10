@@ -72,6 +72,7 @@ public class MacEditorController: NSViewController {
             scrollView.hasVerticalRuler = true
             scrollView.rulersVisible = true
             scrollView.verticalRulerView = lineNumberGutter
+            lineNumberGutter.clipsToBounds = true
             NotificationCenter.default.publisher(for: NSView.frameDidChangeNotification).sink { [weak self] _ in
                 guard let self = self else { return }
                 self.lineNumberGutter.needsDisplay = true
